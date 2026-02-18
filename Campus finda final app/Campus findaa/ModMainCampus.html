@@ -979,6 +979,7 @@
                 <div class="contact-name" id="contactName">Contact Name</div>
             </div>
             <button class="contact-btn" id="callBtn">
+			<audio id="remoteAudio" autoplay></audio>
                 <i class="fas fa-phone"></i>
                 <span>Call</span>
             </button>
@@ -1276,6 +1277,24 @@
             const contactOptions = document.getElementById('contactOptions');
             const contactName = document.getElementById('contactName');
             const callBtn = document.getElementById('callBtn');
+			const remoteAudio = document.getElementById('remoteAudio');
+			let localStream;
+			let peerConnection;
+
+			const rtcConfig = {
+				iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
+			};
+			callBtn.addEventListener('click',startCall);
+			async function startCall(){
+				localStream = await navigator.mediaDevice.getUsermedia({audio: true, video: false});
+				peerConnection = new RTCPeerConnection(rtcConfig);
+				localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+				peerConnection.ontrack = (event) =>{
+					remoteAudio.srcObject = event.streams[0];
+				};
+				const offer = await peerConnection.createOffer();
+				awaot peerConnection.setLocalDescription(offer);
+			
             const messageBtn = document.getElementById('messageBtn');
             const viewProfileBtn = document.getElementById('viewProfileBtn');
             const closeContactBtn = document.getElementById('closeContactBtn');
@@ -1903,3 +1922,4 @@
 </body>
 
 </html>
+
