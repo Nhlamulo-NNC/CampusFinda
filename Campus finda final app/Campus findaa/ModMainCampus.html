@@ -979,7 +979,6 @@
                 <div class="contact-name" id="contactName">Contact Name</div>
             </div>
             <button class="contact-btn" id="callBtn">
-			<audio id="remoteAudio" autoplay></audio>
                 <i class="fas fa-phone"></i>
                 <span>Call</span>
             </button>
@@ -1174,7 +1173,8 @@
 
                 const name = document.getElementById("registerFullName").value;
                 const email = document.getElementById("registerEmail").value;
-                const password = document.getElementById("registerPassword").value;
+                const phoneNumber = document.getElementByID("phone").value;
+				const password = document.getElementById("registerPassword").value;
                 const confirmPassword = document.getElementById("registerConfirmPassword").value;
                 const studentNumber = document.getElementById("registerStudentNumber").value;
                 const lecturerId = document.getElementById("registerLecturerID").value;
@@ -1198,6 +1198,7 @@
                     name,
                     email,
                     password, // In a real app, this should be hashed
+					phoneNumber,
                     userType: userTypeValue,
                     studentNumber: userTypeValue === "student" ? studentNumber : null,
                     lecturerId: userTypeValue === "lecturer" ? lecturerId : null,
@@ -1277,24 +1278,7 @@
             const contactOptions = document.getElementById('contactOptions');
             const contactName = document.getElementById('contactName');
             const callBtn = document.getElementById('callBtn');
-			const remoteAudio = document.getElementById('remoteAudio');
-			let localStream;
-			let peerConnection;
-
-			const rtcConfig = {
-				iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
-			};
-			callBtn.addEventListener('click',startCall);
-			async function startCall(){
-				localStream = await navigator.mediaDevice.getUsermedia({audio: true, video: false});
-				peerConnection = new RTCPeerConnection(rtcConfig);
-				localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-				peerConnection.ontrack = (event) =>{
-					remoteAudio.srcObject = event.streams[0];
-				};
-				const offer = await peerConnection.createOffer();
-				awaot peerConnection.setLocalDescription(offer);
-			
+			const remoteAudio = document.getElementById('remoteAudio');	
             const messageBtn = document.getElementById('messageBtn');
             const viewProfileBtn = document.getElementById('viewProfileBtn');
             const closeContactBtn = document.getElementById('closeContactBtn');
@@ -1922,4 +1906,5 @@
 </body>
 
 </html>
+
 
